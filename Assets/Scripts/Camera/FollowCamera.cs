@@ -37,7 +37,6 @@ public class FollowCamera : MonoBehaviour
         //transform.rotation = Quaternion.Lerp(transform.rotation, head.rotation, smoothSpeed * Time.deltaTime);
 
         RotateCamera();
-
     }
 
     public void Look(InputAction.CallbackContext context)

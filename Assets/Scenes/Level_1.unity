@@ -475,7 +475,8 @@ GameObject:
   - component: {fileID: 300434050}
   - component: {fileID: 300434052}
   - component: {fileID: 300434053}
-  m_Layer: 0
+  - component: {fileID: 300434054}
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -521,10 +522,10 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 126
+  m_Constraints: 116
   m_CollisionDetection: 2
 --- !u!114 &300434051
 MonoBehaviour:
@@ -539,9 +540,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1728329071219979742}
-  currentSpeed: 10
+  acceleration: 7.5
+  moveSpeed: 7.5
   playerMesh: {fileID: 4691746917278936996}
-  smoothTransitionTime: 0.1
 --- !u!114 &300434052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -557,8 +558,6 @@ MonoBehaviour:
   animator: {fileID: 1728329071219979742}
   attackRange: 0.08
   attackDelay: 0.7
-  attackSpeed: 1
-  attackDamage: 1
   attackLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -570,7 +569,7 @@ MonoBehaviour:
   handWaveSound: {fileID: 0}
   cam: {fileID: 6727336634538838843}
   transitionDuration: 0.2
-  parryWindow: 0
+  parryWindow: 1
 --- !u!114 &300434053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -650,7 +649,19 @@ MonoBehaviour:
     m_ActionId: bd97483f-804f-49c7-a8c1-9ae4c6eb04d2
     m_ActionName: 'Movement/Dodge[/Keyboard/shift]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 300434052}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: Parry
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 8777483b-4f81-4cc4-b87f-cda7a671dbfa
     m_ActionName: 'PlayerController/Parry[/Mouse/rightButton,/Keyboard/e]'
   m_NeverAutoSwitchControlSchemes: 0
@@ -658,6 +669,29 @@ MonoBehaviour:
   m_DefaultActionMap: PlayerController
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!136 &300434054
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 300434048}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.56
+  m_Height: 3.13
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!1 &301709111
 GameObject:
   m_ObjectHideFlags: 0
@@ -2149,6 +2183,7 @@ MonoBehaviour:
   attackDistance: 2
   attackDelay: 0.75
   isAttacking: 0
+  cam: {fileID: 8813872229130094411}
   initialState: 1
 --- !u!195 &908817144
 NavMeshAgent:
@@ -4225,8 +4260,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 762247707605239445}
-  - component: {fileID: 762247707605239446}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: mixamorig:RightLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4339,8 +4373,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4864518631052072992}
-  - component: {fileID: 4864518631052072993}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: mixamorig:Spine2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4458,29 +4491,6 @@ Transform:
   - {fileID: 5685766907130424883}
   m_Father: {fileID: 4019935339112839183}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &762247707605239446
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 381105617281803527}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.12
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0.02, y: 0.3, z: 0}
 --- !u!4 &805695663416269547
 Transform:
   m_ObjectHideFlags: 0
@@ -4836,8 +4846,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4019935339112839183}
-  - component: {fileID: 4019935339112839184}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: mixamorig:RightUpLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5379,7 +5388,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1689126943895911719}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: mixamorig:Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6263,29 +6272,6 @@ Transform:
   - {fileID: 762247707605239445}
   m_Father: {fileID: 958207041195708208}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &4019935339112839184
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1422030599627193540}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.18
-  m_Height: 0.69
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.3, z: 0}
 --- !u!4 &4042720873041604419
 Transform:
   m_ObjectHideFlags: 0
@@ -6465,8 +6451,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6213130882805950539}
-  - component: {fileID: 6213130882805950540}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: mixamorig:Spine1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6518,37 +6503,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1642546617383508855}
-  - component: {fileID: 4380225464257773005}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: mixamorig:LeftArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!136 &4380225464257773005
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4380225464257773004}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.11
-  m_Height: 0.53
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.27, z: 0.01}
 --- !u!1 &4396653246487535552
 GameObject:
   m_ObjectHideFlags: 0
@@ -6592,8 +6553,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7279375429195857383}
-  - component: {fileID: 7279375429195857384}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: mixamorig:RightForeArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6824,29 +6784,6 @@ Transform:
   - {fileID: 2642059737383809490}
   m_Father: {fileID: 6213130882805950539}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &4864518631052072993
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 595586783331907218}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.25
-  m_Height: 0.73
-  m_Direction: 0
-  m_Center: {x: 0, y: 0, z: 0.03}
 --- !u!4 &4864702531872181899
 Transform:
   m_ObjectHideFlags: 0
@@ -6886,37 +6823,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1572720834793789258}
-  - component: {fileID: 4938748878642334218}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: mixamorig:RightArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!136 &4938748878642334218
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4938748878642334217}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.11
-  m_Height: 0.53
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.27, z: 0.01}
 --- !u!4 &5032734552076839687
 Transform:
   m_ObjectHideFlags: 0
@@ -7633,37 +7546,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 658869068244581539}
-  - component: {fileID: 5994212372999070965}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: mixamorig:Spine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!136 &5994212372999070965
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5994212372999070964}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.27
-  m_Height: 0.7
-  m_Direction: 0
-  m_Center: {x: 0, y: 0, z: 0.06}
 --- !u!1 &6053865719739711394
 GameObject:
   m_ObjectHideFlags: 0
@@ -7870,29 +7759,6 @@ Transform:
   - {fileID: 4864518631052072992}
   m_Father: {fileID: 658869068244581539}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &6213130882805950540
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4304621975524500552}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.27
-  m_Height: 0.65
-  m_Direction: 0
-  m_Center: {x: 0, y: 0, z: 0.04}
 --- !u!1 &6229084129988715899
 GameObject:
   m_ObjectHideFlags: 0
@@ -8465,29 +8331,6 @@ Transform:
   - {fileID: 6855458579770996615}
   m_Father: {fileID: 1572720834793789258}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &7279375429195857384
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4423057691588360112}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.09
-  m_Height: 0.66
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.26, z: 0}
 --- !u!1 &7279617763180866774
 GameObject:
   m_ObjectHideFlags: 0
@@ -9001,37 +8844,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2713547482415771282}
-  - component: {fileID: 7839463700364003920}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: mixamorig:LeftLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!136 &7839463700364003920
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7839463700364003919}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.12
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0.02, y: 0.3, z: 0}
 --- !u!1 &7844416691889585597
 GameObject:
   m_ObjectHideFlags: 0
@@ -9057,37 +8876,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7283093976977552972}
-  - component: {fileID: 7859854973572252259}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: mixamorig:LeftUpLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!136 &7859854973572252259
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7859854973572252258}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.18
-  m_Height: 0.69
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.3, z: 0}
 --- !u!1 &7882425472228501259
 GameObject:
   m_ObjectHideFlags: 0
@@ -9262,37 +9057,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2324305876710504118}
-  - component: {fileID: 8096269634268486917}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: mixamorig:LeftForeArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!136 &8096269634268486917
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8096269634268486916}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.09
-  m_Height: 0.66
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.26, z: 0}
 --- !u!4 &8140567832740322309
 Transform:
   m_ObjectHideFlags: 0
@@ -9318,37 +9089,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2088159755943302237}
-  - component: {fileID: 8174505130555129144}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: mixamorig:Neck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!136 &8174505130555129144
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8174505130555129143}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.11
-  m_Height: 0.34
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.11, z: 0.03}
 --- !u!1 &8190529895747954650
 GameObject:
   m_ObjectHideFlags: 0
@@ -9835,6 +9582,7 @@ GameObject:
   - component: {fileID: 5404955525021109064}
   - component: {fileID: 6710118971498596974}
   - component: {fileID: 8813872229130094412}
+  - component: {fileID: 8813872229130094413}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -9865,6 +9613,28 @@ MonoBehaviour:
   maxLookAngleTop: 15
   maxLookAngleBottom: 0
   playerRotationSpeed: 10
+--- !u!95 &8813872229130094413
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8813872229130094411}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 074cfe2d85809b446a469e15fd36928f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8877239230759910114
 GameObject:
   m_ObjectHideFlags: 0

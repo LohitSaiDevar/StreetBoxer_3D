@@ -10,8 +10,8 @@ public class PlayerController : MonoBehaviour
     [Header("Attack System")]
     [SerializeField] float attackRange = 3;
     [SerializeField] float attackDelay = 0.4f;
-    [SerializeField] float attackSpeed = 1;
-    [SerializeField] float attackDamage = 1;
+    //[SerializeField] float attackSpeed = 1;
+    //[SerializeField] float attackDamage = 1;
     [SerializeField] LayerMask attackLayer;
     [SerializeField] GameObject hitEffect;
     [SerializeField] Transform attackPoint;
@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     public const string ATTACK3 = "Hook";
 
     [Header("Parry System")]
-    [SerializeField] float parryWindow;
+    public float parryWindow;
     bool isParrying;
     void Awake()
     {
@@ -57,10 +57,11 @@ public class PlayerController : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.C))
         {
-            AttemptToGetUp();
+            //AttemptToGetUp();
         }
     }
 
+    #region Attack
     public void Attack(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -127,6 +128,46 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Damage dealt: " +  damage);
     }
+
+    #endregion
+
+    #region Parry
+    public void Parry(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (!isParrying)
+            {
+                animator.SetTrigger("Block");
+            }
+            StartParry();
+            
+            //Debug.Log("Parry performed");
+        }
+    }
+    public bool CanParry()
+    {
+        return isParrying;
+    }
+
+    public void StartParry()
+    {
+        isParrying = true;
+        
+        StartCoroutine(ParryWindow());
+    }
+    public void EndParry()
+    {
+        isParrying = false;
+    }
+
+    IEnumerator ParryWindow()
+    {
+        yield return new WaitForSeconds(parryWindow);
+        EndParry();
+    }
+
+    #endregion
     void HitTarget(Vector3 pos)
     {
         audioSource.pitch = 1;

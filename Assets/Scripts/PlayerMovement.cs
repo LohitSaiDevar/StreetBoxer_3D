@@ -7,46 +7,26 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] Animator animator;
-    Vector2 movementInput;
-    Vector2 smoothVelocity;
-    [SerializeField] float currentSpeed;
+    Vector2 input;
+    Vector3 currentVelocity;
+    [SerializeField] float acceleration;
+    [SerializeField] float moveSpeed;
     float velocityXSmoothing;
     float velocityZSmoothing;
     [SerializeField] Transform playerMesh;
-    [SerializeField] float smoothTransitionTime = 0.1f;
+    //[SerializeField] float smoothTransitionTime = 0.1f;
+    Rigidbody rb;
     private void Start()
     {
-
+        rb = GetComponent<Rigidbody>();
     }
-    private void Update()
+    private void FixedUpdate()
     {
-        // Get normalized direction and raw magnitude
-        Vector2 inputDirection = movementInput.normalized;
-        float inputMagnitude = movementInput.magnitude;
-
-        float targetSpeed = Mathf.Clamp01(inputMagnitude);
-        currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref velocityXSmoothing, smoothTransitionTime);
-
-        Vector2 scaledVelocity = inputDirection * currentSpeed;
-
-        animator.SetFloat("VelocityX", scaledVelocity.x);
-        animator.SetFloat("VelocityZ", scaledVelocity.y);
-
-        if (movementInput.x > 0)
-        {
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                DodgeRight();
-            }
-        }
-        
-        if (movementInput.x < 0)
-        {
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                DodgeLeft();
-            }
-        }
+        Vector3 move = new Vector3(input.x, 0f, input.y) * moveSpeed;
+        currentVelocity = Vector3.Lerp(currentVelocity, move, acceleration * Time.deltaTime);
+        Debug.Log($"Current velocity:  {currentVelocity}, Input: {input} ");
+        animator.SetFloat("VelocityX", currentVelocity.x);
+        animator.SetFloat("VelocityZ", currentVelocity.z);
     }
 
     private void LateUpdate()
@@ -56,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
     }
     public void Move(InputAction.CallbackContext context)
     {
-        movementInput = context.ReadValue<Vector2>();
+        input = context.ReadValue<Vector2>();
     }
 
     

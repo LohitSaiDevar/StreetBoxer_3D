@@ -18,8 +18,9 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] float attackDistance;
     [SerializeField] float attackDelay;
     public bool isAttacking;
-    bool isPlayerHit;
     
+    bool isPlayerHit;
+    [SerializeField] GameObject cam;
     //StateMachine
     EnemyStateMachine stateMachine;
     [SerializeField] EnemyStateID initialState;
@@ -43,23 +44,23 @@ public class EnemyAI : MonoBehaviour
 
     void AttackRaycast()
     {
-        RaycastHit[] hits = Physics.RaycastAll(attackPoint.transform.position, attackPoint.transform.forward, attackDistance, attackLayer);
-        if (hits.Length > 0)
+        Ray ray = new Ray(attackPoint.position, attackPoint.forward);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, attackDistance, attackLayer))
         {
-            RaycastHit closestHit = hits.OrderBy(h => h.distance).First();
-            PlayerController player = closestHit.collider.GetComponentInParent<PlayerController>();
-            if (player != null)
-            {
-                player.TakeDamage(enemyStats.attackPower);
-                Debug.Log("Player has been hit: " + closestHit.collider.gameObject.name); // Optional debug
-            }
+            Debug.Log("Ray is hit");
+            //Animator camAnimator = cam.GetComponent<Animator>();
+            //camAnimator.SetTrigger("isHit");
         }
+
+        Debug.DrawRay(attackPoint.position, attackPoint.forward * attackDistance, Color.red, 0.1f);
     }
     private void OnDrawGizmosSelected()
     {
         if (attackPoint != null)
         {
-            Gizmos.DrawWireSphere(attackPoint.transform.position, attackRadius);
+            Gizmos.DrawLine(attackPoint.position, attackPoint.position + attackPoint.forward * attackDistance);
         }
     }
 
@@ -68,12 +69,19 @@ public class EnemyAI : MonoBehaviour
         float distance = Vector3.Distance(transform.position, target.position);
         if (distance < attackDistance)
         {
-            if (!target.GetComponent<PlayerController>().isEnemyHit)
+            PlayerController player = target.GetComponentInParent<PlayerController>();
+            if (!player.isEnemyHit)
             {
                 animator.SetTrigger("Punch");
-                if (isAttacking)
+                if (isAttacking && !player.CanParry())
                 {
                     AttackRaycast();
+                    isAttacking = false;
+                }
+                else if(isAttacking && player.CanParry())
+                {
+                    Debug.Log("Parried");
+                    animator.SetTrigger("isParried");
                     isAttacking = false;
                 }
             }
