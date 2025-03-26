@@ -1,7 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+public enum AttackMove
+{
+    Cross,
+    Jab,
+    Hook,
+}
 
 public class PlayerController : MonoBehaviour
 {
@@ -19,13 +27,17 @@ public class PlayerController : MonoBehaviour
     bool readyToAttack = true;
     bool attacking = false;
     public bool isEnemyHit;
+    bool isEnemyStunned;
     int attackCount = 0;
     internal bool isDefeated;
+    AttackMove attackMove;
+
+    public static Action OnPlayerAttack;
 
     [Header("Sound Effects")]
     AudioSource audioSource;
-    [SerializeField] AudioClip hitSound;
     [SerializeField] AudioClip handWaveSound;
+    [SerializeField] AudioClip punchSound;
     [SerializeField] Camera cam;
 
 
@@ -39,7 +51,10 @@ public class PlayerController : MonoBehaviour
 
     [Header("Parry System")]
     public float parryWindow;
-    bool isParrying;
+    public bool isParrying;
+    bool isParryAvailable;
+
+    [SerializeField] EnemyAI enemy;
     void Awake()
     {
         if (audioSource != null)
@@ -73,25 +88,27 @@ public class PlayerController : MonoBehaviour
             //Debug.Log("attack");
             Invoke(nameof(ResetAttack), attackDelay);
 
-            //audioSource.pitch = Random.Range(0.9f, 1.1f);
-            //audioSource.PlayOneShot(handWaveSound);
+            AudioManager.Instance.PlaySFX(handWaveSound);
 
             if (attackCount == 0)
             {
                 animator.SetTrigger(ATTACK1);
-                //Debug.Log("Attack 1");
+                attackMove = AttackMove.Cross;
+                Debug.Log("AttackMove: " + attackMove);
                 attackCount++;
             }
-            else if(attackCount == 1)
+            else if (attackCount == 1)
             {
                 animator.SetTrigger(ATTACK2);
-                //Debug.Log("Attack 2");
+                attackMove = AttackMove.Jab;
+                Debug.Log("AttackMove: " + attackMove);
                 attackCount++;
             }
-            else
+            else if (attackCount == 2)
             {
                 animator.SetTrigger(ATTACK3);
-                //Debug.Log("Attack3");
+                attackMove = AttackMove.Hook;
+                Debug.Log("AttackMove: " + attackMove);
                 attackCount = 0;
             }
         }
@@ -103,6 +120,7 @@ public class PlayerController : MonoBehaviour
         readyToAttack = true;
         isEnemyHit = false;
         attacking = false;
+        isParrying = false;
     }
     public void AttackRaycast()
     {
@@ -126,6 +144,8 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        cam.GetComponent<CameraShake>().ShakeCamera();
+        AudioManager.Instance.PlaySFX(punchSound);
         Debug.Log("Damage dealt: " +  damage);
     }
 
@@ -134,44 +154,25 @@ public class PlayerController : MonoBehaviour
     #region Parry
     public void Parry(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
-            if (!isParrying)
+            animator.SetTrigger("Block");
+            if (enemy != null)
             {
-                animator.SetTrigger("Block");
+                //Debug.Log($"Parry Pressed - Enemy isAttacking: {enemy.isAttacking}"); // Debug log
+                enemy.ParryAttempt();
             }
-            StartParry();
-            
-            //Debug.Log("Parry performed");
+            else
+            {
+                //Debug.Log("Enemy reference is null!");
+            }
         }
     }
-    public bool CanParry()
-    {
-        return isParrying;
-    }
-
-    public void StartParry()
-    {
-        isParrying = true;
-        
-        StartCoroutine(ParryWindow());
-    }
-    public void EndParry()
-    {
-        isParrying = false;
-    }
-
-    IEnumerator ParryWindow()
-    {
-        yield return new WaitForSeconds(parryWindow);
-        EndParry();
-    }
-
     #endregion
     void HitTarget(Vector3 pos)
     {
         audioSource.pitch = 1;
-        audioSource.PlayOneShot(hitSound);
+        audioSource.PlayOneShot(punchSound);
 
         GameObject GO = Instantiate(hitEffect, pos, Quaternion.identity);
         Destroy(GO, 20);
@@ -183,32 +184,6 @@ public class PlayerController : MonoBehaviour
 
         currentAnimationState = newState;
         animator.CrossFadeInFixedTime(currentAnimationState, transitionDuration);
-    }
-    public void Jab()
-    {
-        animator.SetTrigger("Jab");
-        StartCoroutine(AttackCooldown());
-    }
-
-    public void Cross()
-    {
-        animator.SetTrigger("Cross");
-        StartCoroutine(AttackCooldown());
-    }
-    public void Hook()
-    {
-        animator.SetTrigger("Hook");
-    }
-
-    public void UpperCut()
-    {
-        animator.SetTrigger("UpperCut");
-    }
-
-    public void Block()
-    {
-        animator.SetTrigger("Block");
-        StartCoroutine(AttackCooldown());
     }
 
     public void TakingHit()

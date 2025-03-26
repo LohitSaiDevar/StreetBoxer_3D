@@ -17,13 +17,24 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] float attackRadius;
     [SerializeField] float attackDistance;
     [SerializeField] float attackDelay;
+    [SerializeField] float firstAttackDelay;
     public bool isAttacking;
-    
-    bool isPlayerHit;
+    bool isPlayerAttacking;
+    float numberOfHitsTaken = 0;
+    [SerializeField] float numberOfHits;
+    bool isTooManyHits;
+    public bool isPlayerHit;
     [SerializeField] GameObject cam;
     //StateMachine
     EnemyStateMachine stateMachine;
     [SerializeField] EnemyStateID initialState;
+
+    public bool playerIsParrying;
+
+    bool readyToAttack = true;
+    bool hasAttacked = false;
+
+    AttackMove playerAttackMove;
     private void Start()
     {
         stateMachine = new EnemyStateMachine(this);
@@ -34,11 +45,77 @@ public class EnemyAI : MonoBehaviour
     private void Update()
     {
         stateMachine.Update();
-        StartCoroutine(AttackDelay());
+    }
+
+    private void FixedUpdate()
+    {
+        if (readyToAttack)
+        {
+            Invoke(nameof(Attack), attackDelay);
+        }
     }
     public void TakeDamage()
     {
-        animator.SetTrigger("IsHit");
+        if (numberOfHitsTaken >= numberOfHits)
+        {
+            isTooManyHits = true;
+            if (isTooManyHits)
+            {
+                Block();
+                isPlayerAttacking = false;
+            }
+        }
+        else if (playerIsParrying)
+        {
+            animator.SetTrigger("Crit");
+        }
+        else
+        {
+            isPlayerAttacking = true;
+            switch (playerAttackMove)
+            {
+                case AttackMove.Cross:
+
+                    float randomChance_1 = Random.Range(0, 3);
+                    if (randomChance_1 == 0)
+                    {
+                        animator.SetTrigger("HeadHit_1");
+                        Debug.Log("HeadHit_1");
+                    }
+                    else if (randomChance_1 == 1)
+                    {
+                        animator.SetTrigger("HeadHit_2");
+                        Debug.Log("HeadHit_2");
+                    }
+                    else if (randomChance_1 == 2)
+                    {
+                        animator.SetTrigger("HeadHit_3");
+                        Debug.Log("HeadHit_3");
+                    }
+                    break;
+
+                case AttackMove.Jab:
+                    animator.SetTrigger("SideHit");
+                    Debug.Log("SideHit");
+                    break;
+
+                case AttackMove.Hook:
+                    float randomChance_3 = Random.Range(0, 2);
+                    if (randomChance_3 == 0)
+                    {
+                        animator.SetTrigger("HitToBody_1");
+                        Debug.Log("HitToBody_1");
+                    }
+                    else if (randomChance_3 == 1)
+                    {
+                        animator.SetTrigger("HitToBody_2");
+                        Debug.Log("HitToBody_2");
+                    }
+                    break;
+            }
+            numberOfHitsTaken++;
+        }
+            
         //Debug.Log($"Collider: {collider.gameObject.name}");
     }
 
@@ -50,6 +127,8 @@ public class EnemyAI : MonoBehaviour
         if (Physics.Raycast(ray, out hit, attackDistance, attackLayer))
         {
             Debug.Log("Ray is hit");
+            PlayerController player = hit.collider.GetComponent<PlayerController>();
+            player.TakeDamage(40);
             //Animator camAnimator = cam.GetComponent<Animator>();
             //camAnimator.SetTrigger("isHit");
         }
@@ -70,27 +149,32 @@ public class EnemyAI : MonoBehaviour
         if (distance < attackDistance)
         {
             PlayerController player = target.GetComponentInParent<PlayerController>();
-            if (!player.isEnemyHit)
+            if (!player.isEnemyHit && !isPlayerAttacking)
             {
                 animator.SetTrigger("Punch");
-                if (isAttacking && !player.CanParry())
+                if (!playerIsParrying && isPlayerHit)
                 {
+                    Debug.Log("Does work");
                     AttackRaycast();
-                    isAttacking = false;
-                }
-                else if(isAttacking && player.CanParry())
-                {
-                    Debug.Log("Parried");
-                    animator.SetTrigger("isParried");
-                    isAttacking = false;
+                    isPlayerHit = false;
                 }
             }
         }
     }
 
-    IEnumerator AttackDelay()
+    public void ParryAttempt()
     {
-        Attack();
-        yield return new WaitForSeconds(attackDelay);
+        if (isAttacking)
+        {
+            Debug.Log("Parried");
+            animator.SetTrigger("isParried");
+            playerIsParrying = true;
+            isAttacking = false;
+        }
+    }
+    void Block()
+    {
+        animator.SetTrigger("Block");
+        isTooManyHits = false;
     }
 }

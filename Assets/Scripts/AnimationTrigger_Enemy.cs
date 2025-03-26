@@ -16,8 +16,19 @@ public class AnimationTrigger_Enemy : MonoBehaviour
         
     }
 
-    public void AnimationTrigger()
+    public void RayHitsPlayer()
+    {
+        enemy.isPlayerHit = true;
+    }
+    public void StartParryWindow()
     {
         enemy.isAttacking = true;
+        Debug.Log("Parry window opened! isAttacking = " + enemy.isAttacking);
+    }
+
+    public void EndParryWindow()
+    {
+        enemy.isAttacking = false;
+        enemy.playerIsParrying = false;
     }
 }

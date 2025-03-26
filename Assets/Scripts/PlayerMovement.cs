@@ -24,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 move = new Vector3(input.x, 0f, input.y) * moveSpeed;
         currentVelocity = Vector3.Lerp(currentVelocity, move, acceleration * Time.deltaTime);
-        Debug.Log($"Current velocity:  {currentVelocity}, Input: {input} ");
+        //Debug.Log($"Current velocity:  {currentVelocity}, Input: {input} ");
         animator.SetFloat("VelocityX", currentVelocity.x);
         animator.SetFloat("VelocityZ", currentVelocity.z);
     }
